@@ -63,8 +63,7 @@ Vue.filter('formataDataTempoGlobal', function (d) {
     tempo = tempo.split('.')
     tempo = tempo[0]
 
-    console.log(data)
-    console.log(tempo)
+   
     return data + ' ' + tempo
 
 

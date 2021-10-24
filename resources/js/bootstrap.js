@@ -1,3 +1,5 @@
+const { default: axios } = require('axios');
+
 window._ = require('lodash');
 
 /**
@@ -45,7 +47,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.interceptors.request.use(
     config => {
         console.log('interceptando o request', config)
-        return config;
+        return config
     },
     error => {
         console.log('interceptando o request', error)
@@ -57,12 +59,21 @@ axios.interceptors.request.use(
 /* intercepar os respostas da aplicação */
 axios.interceptors.response.use(
     response => {
+
         console.log('interceptando o response antes da aplicação', response)
         return response
 
     },
     error => {
-        console.log('Erro na reposta', error)
+        console.log('Erro na reposta', error.response)
+        if(error.response.status === 401){
+            axios.post('http://localhost:8000/api/refresh')
+            .then(response => {
+                console.log('refresh com sucesso', response)
+                document.cookie = 'token=' + response.data.token
+                window.location.reload()
+            })
+        }
         return Promise.reject(error)
       }
 
